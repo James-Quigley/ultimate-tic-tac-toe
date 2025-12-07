@@ -1,0 +1,236 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+    --bg-primary: #1a1a2e;
+    --bg-secondary: #16213e;
+    --bg-board: #0f3460;
+    --accent: #e94560;
+    --accent-hover: #ff6b6b;
+    --text: #eee;
+    --text-dim: #aaa;
+    --winner-x: #4ecdc4;
+    --winner-o: #f39c12;
+    --active-board: #533483;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    overflow-x: hidden;
+}
+
+#app {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+header {
+    text-align: center;
+}
+
+h1 {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+    margin-bottom: 10px;
+    color: var(--accent);
+}
+
+#status {
+    font-size: clamp(1rem, 3vw, 1.2rem);
+    color: var(--text-dim);
+    min-height: 1.5em;
+}
+
+#game-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+#mega-board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    background: var(--bg-secondary);
+    padding: 8px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 500px;
+    aspect-ratio: 1;
+}
+
+.small-board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    background: var(--bg-board);
+    padding: 4px;
+    border-radius: 8px;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.small-board.active {
+    background: var(--active-board);
+    box-shadow: 0 0 20px rgba(83, 52, 131, 0.5);
+}
+
+.small-board.won {
+    opacity: 0.7;
+}
+
+.cell {
+    aspect-ratio: 1;
+    background: var(--bg-secondary);
+    border: none;
+    border-radius: 6px;
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    font-weight: bold;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    touch-action: manipulation;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+}
+
+.cell:active {
+    transform: scale(0.95);
+}
+
+.cell.x {
+    color: var(--winner-x);
+}
+
+.cell.o {
+    color: var(--winner-o);
+}
+
+.cell:not(.filled):hover {
+    background: var(--bg-board);
+}
+
+.cell.filled {
+    cursor: not-allowed;
+}
+
+.cell:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.winner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(3rem, 10vw, 5rem);
+    font-weight: bold;
+    border-radius: 8px;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.winner-overlay.x {
+    color: var(--winner-x);
+    background: rgba(78, 205, 196, 0.2);
+}
+
+.winner-overlay.o {
+    color: var(--winner-o);
+    background: rgba(243, 156, 18, 0.2);
+}
+
+.winner-overlay.draw {
+    color: var(--text-dim);
+    background: rgba(255, 255, 255, 0.1);
+    font-size: clamp(2rem, 6vw, 3rem);
+}
+
+#controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+button {
+    background: var(--accent);
+    color: var(--text);
+    border: none;
+    padding: 14px 28px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    touch-action: manipulation;
+    min-height: 48px;
+}
+
+button:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 5px;
+    }
+
+    #app {
+        gap: 15px;
+    }
+
+    #mega-board {
+        gap: 6px;
+        padding: 6px;
+    }
+
+    .small-board {
+        gap: 3px;
+        padding: 3px;
+    }
+}
+
+@media (max-height: 700px) and (orientation: portrait) {
+    body {
+        padding: 5px;
+    }
+
+    #app {
+        gap: 10px;
+    }
+
+    h1 {
+        font-size: 1.3rem;
+        margin-bottom: 5px;
+    }
+
+    #status {
+        font-size: 0.9rem;
+    }
+}
