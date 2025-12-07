@@ -1,20 +1,60 @@
-import { UltimateTicTacToe, WinResult } from './game';
+import { UltimateTicTacToe, WinResult, GameConfig, GameMode, PlayerType } from './game';
 
 class GameUI {
-    private game: UltimateTicTacToe;
+    private game: UltimateTicTacToe | null = null;
+    private setupScreen: HTMLElement;
+    private gameScreen: HTMLElement;
     private megaBoardElement: HTMLElement;
     private statusElement: HTMLElement;
+    private scoresElement: HTMLElement;
     private resetButton: HTMLElement;
+    private startGameButton: HTMLElement;
+    private isComputerThinking = false;
 
     constructor() {
-        this.game = new UltimateTicTacToe();
+        this.setupScreen = document.getElementById('setup-screen')!;
+        this.gameScreen = document.getElementById('game-screen')!;
         this.megaBoardElement = document.getElementById('mega-board')!;
         this.statusElement = document.getElementById('status')!;
+        this.scoresElement = document.getElementById('scores')!;
         this.resetButton = document.getElementById('reset-btn')!;
+        this.startGameButton = document.getElementById('start-game-btn')!;
+
+        this.attachSetupListeners();
+    }
+
+    private attachSetupListeners(): void {
+        this.startGameButton.addEventListener('click', () => {
+            const modeInput = document.querySelector('input[name="mode"]:checked') as HTMLInputElement;
+            const opponentInput = document.querySelector('input[name="opponent"]:checked') as HTMLInputElement;
+
+            const config: GameConfig = {
+                mode: modeInput.value as GameMode,
+                playerO: opponentInput.value as PlayerType,
+            };
+
+            this.startGame(config);
+        });
+
+        this.resetButton.addEventListener('click', () => {
+            this.showSetupScreen();
+        });
+    }
+
+    private startGame(config: GameConfig): void {
+        this.game = new UltimateTicTacToe(config);
+        this.setupScreen.classList.add('hidden');
+        this.gameScreen.classList.remove('hidden');
 
         this.initializeUI();
-        this.attachEventListeners();
+        this.attachGameListeners();
         this.updateUI();
+    }
+
+    private showSetupScreen(): void {
+        this.setupScreen.classList.remove('hidden');
+        this.gameScreen.classList.add('hidden');
+        this.game = null;
     }
 
     private initializeUI(): void {
@@ -37,7 +77,7 @@ class GameUI {
         }
     }
 
-    private attachEventListeners(): void {
+    private attachGameListeners(): void {
         this.megaBoardElement.addEventListener('click', (e) => {
             const target = e.target as HTMLElement;
             if (target.classList.contains('cell')) {
@@ -46,22 +86,57 @@ class GameUI {
                 this.handleCellClick(boardIndex, cellIndex);
             }
         });
-
-        this.resetButton.addEventListener('click', () => {
-            this.game.reset();
-            this.initializeUI();
-            this.updateUI();
-        });
     }
 
     private handleCellClick(boardIndex: number, cellIndex: number): void {
+        if (!this.game || this.isComputerThinking) return;
+
+        const state = this.game.getState();
+
+        // Prevent human player from making moves for computer
+        if (state.currentPlayer === 'O' && state.config.playerO === 'computer') {
+            return;
+        }
+
         if (this.game.makeMove(boardIndex, cellIndex)) {
             this.updateUI();
+
+            // Trigger computer move if needed
+            this.checkComputerMove();
+        }
+    }
+
+    private async checkComputerMove(): Promise<void> {
+        if (!this.game) return;
+
+        const state = this.game.getState();
+
+        if (state.currentPlayer === 'O' &&
+            state.config.playerO === 'computer' &&
+            state.gameWinner === null &&
+            !this.isComputerThinking) {
+
+            this.isComputerThinking = true;
+
+            // Add a small delay so the computer doesn't move instantly
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            if (this.game.makeComputerMove()) {
+                this.updateUI();
+            }
+
+            this.isComputerThinking = false;
         }
     }
 
     private updateUI(): void {
+        if (!this.game) return;
+
         const state = this.game.getState();
+        const scores = this.game.getScores();
+
+        // Update scores
+        this.scoresElement.textContent = `Score: X ${scores.X} - ${scores.O} O`;
 
         for (let boardIndex = 0; boardIndex < 9; boardIndex++) {
             const smallBoard = this.megaBoardElement.querySelector(
@@ -88,7 +163,8 @@ class GameUI {
                 cell.classList.toggle('o', cellValue === 'O');
 
                 const isValid = this.game.isValidMove(boardIndex, cellIndex);
-                cell.disabled = !isValid;
+                const isComputerTurn = state.currentPlayer === 'O' && state.config.playerO === 'computer';
+                cell.disabled = !isValid || isComputerTurn || this.isComputerThinking;
             }
         }
 
@@ -114,15 +190,24 @@ class GameUI {
         }
     }
 
-    private updateStatus(state: ReturnType<typeof this.game.getState>): void {
+    private updateStatus(state: ReturnType<UltimateTicTacToe['getState']>): void {
         if (state.gameWinner === 'draw') {
             this.statusElement.textContent = "Game Over - It's a Draw!";
         } else if (state.gameWinner) {
-            this.statusElement.textContent = `Game Over - ${state.gameWinner} Wins! 🎉`;
-        } else if (state.activeBoard === null) {
-            this.statusElement.textContent = `${state.currentPlayer}'s turn - Play in any available board`;
+            const modeDesc = state.config.mode === 'three-in-row' ? '3 in a row' : 'most wins';
+            this.statusElement.textContent = `Game Over - ${state.gameWinner} Wins (${modeDesc})!`;
+        } else if (this.isComputerThinking) {
+            this.statusElement.textContent = 'Computer is thinking...';
         } else {
-            this.statusElement.textContent = `${state.currentPlayer}'s turn - Play in highlighted board`;
+            const playerDesc = state.currentPlayer === 'O' && state.config.playerO === 'computer'
+                ? 'Computer'
+                : state.currentPlayer;
+
+            if (state.activeBoard === null) {
+                this.statusElement.textContent = `${playerDesc}'s turn - Play in any available board`;
+            } else {
+                this.statusElement.textContent = `${playerDesc}'s turn - Play in highlighted board`;
+            }
         }
     }
 }
