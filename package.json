@@ -5,9 +5,11 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:viewport": "playwright test"
   },
   "devDependencies": {
+    "@playwright/test": "^1.40.1",
     "typescript": "^5.3.3",
     "vite": "^5.0.10"
   }

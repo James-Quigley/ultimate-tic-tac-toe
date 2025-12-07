@@ -73,8 +73,8 @@ h1 {
     background: var(--bg-secondary);
     padding: 6px;
     border-radius: 12px;
-    width: calc(100vw - 40px);
-    max-width: min(90vw, 500px, calc(100dvh - 200px));
+    width: 100%;
+    max-width: min(85vw, 450px, calc(100dvh - 200px));
     aspect-ratio: 1;
     box-sizing: border-box;
 }
@@ -214,8 +214,7 @@ button:active {
     #mega-board {
         gap: 4px;
         padding: 4px;
-        width: calc(100vw - 20px);
-        max-width: 95vw;
+        max-width: min(92vw, 400px);
     }
 
     .small-board {
@@ -248,8 +247,7 @@ button:active {
     #mega-board {
         gap: 3px;
         padding: 3px;
-        width: calc(100vw - 16px);
-        max-width: 98vw;
+        max-width: min(94vw, 340px);
     }
 
     .small-board {
@@ -292,7 +290,7 @@ button:active {
     }
 
     #mega-board {
-        max-width: min(90vw, 500px, calc(100dvh - 140px));
+        max-width: min(85vw, 450px, calc(100dvh - 140px));
     }
 
     button {
