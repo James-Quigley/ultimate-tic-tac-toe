@@ -64,6 +64,7 @@ h1 {
     justify-content: center;
     align-items: center;
     width: 100%;
+    box-sizing: border-box;
 }
 
 #mega-board {
@@ -73,10 +74,11 @@ h1 {
     background: var(--bg-secondary);
     padding: 6px;
     border-radius: 12px;
-    width: 100%;
-    max-width: min(85vw, 450px, calc(100dvh - 200px));
+    width: min(85vw, 450px, calc(100dvh - 200px));
     aspect-ratio: 1;
     box-sizing: border-box;
+    flex-shrink: 0;
+    margin: 0 auto;
 }
 
 .small-board {
@@ -87,12 +89,13 @@ h1 {
     padding: 4px;
     border-radius: 8px;
     position: relative;
-    transition: all 0.2s ease;
+    transition: background 0.2s ease;
+    box-sizing: border-box;
 }
 
 .small-board.active {
     background: var(--active-board);
-    box-shadow: 0 0 20px rgba(83, 52, 131, 0.5);
+    box-shadow: inset 0 0 0 2px rgba(83, 52, 131, 0.8);
 }
 
 .small-board.won {
@@ -108,11 +111,12 @@ h1 {
     font-weight: bold;
     color: var(--text);
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: background 0.15s ease, transform 0.15s ease;
     touch-action: manipulation;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-sizing: border-box;
 }
 
 .cell:active {
@@ -214,7 +218,7 @@ button:active {
     #mega-board {
         gap: 4px;
         padding: 4px;
-        max-width: min(92vw, 400px);
+        width: min(92vw, 400px);
     }
 
     .small-board {
@@ -247,7 +251,7 @@ button:active {
     #mega-board {
         gap: 3px;
         padding: 3px;
-        max-width: min(94vw, 340px);
+        width: min(94vw, 340px);
     }
 
     .small-board {
@@ -290,7 +294,7 @@ button:active {
     }
 
     #mega-board {
-        max-width: min(85vw, 450px, calc(100dvh - 140px));
+        width: min(85vw, 450px, calc(100dvh - 140px));
     }
 
     button {
