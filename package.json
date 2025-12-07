@@ -6,11 +6,15 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "test:viewport": "playwright test"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.1",
+    "@vitest/ui": "^1.0.4",
     "typescript": "^5.3.3",
-    "vite": "^5.0.10"
+    "vite": "^5.0.10",
+    "vitest": "^1.0.4"
   }
 }

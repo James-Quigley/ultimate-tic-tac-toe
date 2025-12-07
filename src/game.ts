@@ -50,7 +50,14 @@ export class UltimateTicTacToe {
     }
 
     public getState(): GameState {
-        return { ...this.state };
+        return {
+            megaBoard: this.state.megaBoard.map(board => [...board]),
+            smallBoardWinners: [...this.state.smallBoardWinners],
+            currentPlayer: this.state.currentPlayer,
+            activeBoard: this.state.activeBoard,
+            gameWinner: this.state.gameWinner,
+            config: { ...this.state.config },
+        };
     }
 
     public reset(config?: GameConfig): void {
