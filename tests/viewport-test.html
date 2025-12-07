@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1a1a2e">
+    <title>Viewport Test - Ultimate Tic-Tac-Toe</title>
+    <link rel="stylesheet" href="/src/style.css">
+    <style>
+        .debug-overlay {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.95);
+            color: #0f0;
+            padding: 8px;
+            font-family: monospace;
+            font-size: 10px;
+            z-index: 10000;
+            line-height: 1.4;
+            max-height: 40vh;
+            overflow-y: auto;
+        }
+        .pass { color: #0f0; }
+        .fail { color: #f00; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>Ultimate Tic-Tac-Toe</h1>
+            <div id="status"></div>
+        </header>
+
+        <div id="game-container">
+            <div id="mega-board"></div>
+        </div>
+
+        <div id="controls">
+            <button id="reset-btn">New Game</button>
+        </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+    <script type="module">
+        // Wait for page to fully load
+        window.addEventListener('load', () => {
+            setTimeout(runTests, 200);
+        });
+
+        function runTests() {
+            const viewport = {
+                width: window.innerWidth,
+                height: window.innerHeight
+            };
+
+            const megaBoard = document.getElementById('mega-board');
+            if (!megaBoard) {
+                console.error('Board not found');
+                return;
+            }
+
+            const boardRect = megaBoard.getBoundingClientRect();
+            const body = document.body;
+            const html = document.documentElement;
+
+            const tests = [
+                {
+                    name: 'Board right edge fits in viewport',
+                    pass: (boardRect.right) <= viewport.width,
+                    actual: `${boardRect.right.toFixed(1)}px`,
+                    expected: `<= ${viewport.width}px`,
+                    margin: (viewport.width - boardRect.right).toFixed(1)
+                },
+                {
+                    name: 'Board left edge is not negative',
+                    pass: boardRect.left >= 0,
+                    actual: `${boardRect.left.toFixed(1)}px`,
+                    expected: `>= 0px`,
+                    margin: boardRect.left.toFixed(1)
+                },
+                {
+                    name: 'Board width fits in viewport',
+                    pass: boardRect.width <= viewport.width,
+                    actual: `${boardRect.width.toFixed(1)}px`,
+                    expected: `<= ${viewport.width}px`,
+                    margin: (viewport.width - boardRect.width).toFixed(1)
+                },
+                {
+                    name: 'No horizontal scroll (body)',
+                    pass: body.scrollWidth <= body.clientWidth,
+                    actual: `${body.scrollWidth}px`,
+                    expected: `<= ${body.clientWidth}px`,
+                    margin: (body.clientWidth - body.scrollWidth)
+                },
+                {
+                    name: 'No horizontal scroll (html)',
+                    pass: html.scrollWidth <= html.clientWidth,
+                    actual: `${html.scrollWidth}px`,
+                    expected: `<= ${html.clientWidth}px`,
+                    margin: (html.clientWidth - html.scrollWidth)
+                }
+            ];
+
+            const overlay = document.createElement('div');
+            overlay.className = 'debug-overlay';
+
+            let htmlContent = `<div>📐 VIEWPORT TEST RESULTS</div>`;
+            htmlContent += `<div>Viewport: ${viewport.width}x${viewport.height}</div>`;
+            htmlContent += `<div>Board: ${boardRect.width.toFixed(1)}x${boardRect.height.toFixed(1)}</div>`;
+            htmlContent += `<div>Board position: left=${boardRect.left.toFixed(1)}, right=${boardRect.right.toFixed(1)}</div>`;
+            htmlContent += `<div>---</div>`;
+
+            let allPassed = true;
+            tests.forEach(test => {
+                const status = test.pass ? 'PASS' : 'FAIL';
+                const className = test.pass ? 'pass' : 'fail';
+                htmlContent += `<div class="${className}">[${status}] ${test.name}</div>`;
+                htmlContent += `<div class="${className}">  ${test.actual} | Expected: ${test.expected} | Margin: ${test.margin}px</div>`;
+                if (!test.pass) allPassed = false;
+            });
+
+            htmlContent += `<div>---</div>`;
+            htmlContent += `<div class="${allPassed ? 'pass' : 'fail'}">Overall: ${allPassed ? 'ALL TESTS PASSED ✓' : 'SOME TESTS FAILED ✗'}</div>`;
+
+            overlay.innerHTML = htmlContent;
+            document.body.appendChild(overlay);
+
+            // Also log to console
+            console.log('=== VIEWPORT TESTS ===');
+            console.log(`Viewport: ${viewport.width}x${viewport.height}`);
+            console.log(`Board rect:`, boardRect);
+            tests.forEach(test => {
+                console.log(`[${test.pass ? 'PASS' : 'FAIL'}] ${test.name}: ${test.actual}`);
+            });
+            console.log(`Overall: ${allPassed ? 'PASSED' : 'FAILED'}`);
+        }
+
+        // Re-run on resize
+        window.addEventListener('resize', () => {
+            document.querySelector('.debug-overlay')?.remove();
+            setTimeout(runTests, 100);
+        });
+    </script>
+</body>
+</html>
