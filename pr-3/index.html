@@ -5,22 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#1a1a2e">
     <title>Ultimate Tic-Tac-Toe</title>
-  <script type="module" crossorigin src="/ultimate-tic-tac-toe/pr-3/assets/index-XxMHsEQ8.js"></script>
-  <link rel="stylesheet" crossorigin href="/ultimate-tic-tac-toe/pr-3/assets/index-kHdFgmOo.css">
+  <script type="module" crossorigin src="/ultimate-tic-tac-toe/pr-3/assets/index-CMxkXyWq.js"></script>
+  <link rel="stylesheet" crossorigin href="/ultimate-tic-tac-toe/pr-3/assets/index-DuT3rlOX.css">
 </head>
 <body>
     <div id="app">
-        <header>
-            <h1>Ultimate Tic-Tac-Toe</h1>
-            <div id="status"></div>
-        </header>
+        <div id="setup-screen">
+            <header>
+                <h1>Ultimate Tic-Tac-Toe</h1>
+            </header>
 
-        <div id="game-container">
-            <div id="mega-board"></div>
+            <div class="setup-container">
+                <div class="setup-section">
+                    <h2>Game Mode</h2>
+                    <div class="option-group">
+                        <label class="option-card">
+                            <input type="radio" name="mode" value="three-in-row" checked>
+                            <div class="option-content">
+                                <div class="option-title">Three in a Row</div>
+                                <div class="option-desc">Win 3 subgrids in a row (classic)</div>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="mode" value="most-wins">
+                            <div class="option-content">
+                                <div class="option-title">Most Wins</div>
+                                <div class="option-desc">Win the most subgrids</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setup-section">
+                    <h2>Opponent</h2>
+                    <div class="option-group">
+                        <label class="option-card">
+                            <input type="radio" name="opponent" value="human" checked>
+                            <div class="option-content">
+                                <div class="option-title">Human</div>
+                                <div class="option-desc">Play against another person</div>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="opponent" value="computer">
+                            <div class="option-content">
+                                <div class="option-title">Computer</div>
+                                <div class="option-desc">Play against AI</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <button id="start-game-btn" class="primary-btn">Start Game</button>
+            </div>
         </div>
 
-        <div id="controls">
-            <button id="reset-btn">New Game</button>
+        <div id="game-screen" class="hidden">
+            <header>
+                <h1>Ultimate Tic-Tac-Toe</h1>
+                <div id="scores"></div>
+                <div id="status"></div>
+            </header>
+
+            <div id="game-container">
+                <div id="mega-board"></div>
+            </div>
+
+            <div id="controls">
+                <button id="reset-btn">New Game</button>
+            </div>
         </div>
     </div>
 </body>
