@@ -23,19 +23,21 @@ body {
     background: var(--bg-primary);
     color: var(--text);
     min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     padding: 10px;
     overflow-x: hidden;
 }
 
 #app {
     width: 100%;
-    max-width: 600px;
+    max-width: min(600px, 100vw - 20px);
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
+    padding-top: 10px;
 }
 
 header {
@@ -43,15 +45,16 @@ header {
 }
 
 h1 {
-    font-size: clamp(1.5rem, 5vw, 2rem);
-    margin-bottom: 10px;
+    font-size: clamp(1.2rem, 4vw, 2rem);
+    margin-bottom: 8px;
     color: var(--accent);
 }
 
 #status {
-    font-size: clamp(1rem, 3vw, 1.2rem);
+    font-size: clamp(0.85rem, 2.5vw, 1.1rem);
     color: var(--text-dim);
     min-height: 1.5em;
+    line-height: 1.4;
 }
 
 #game-container {
@@ -69,7 +72,8 @@ h1 {
     padding: 8px;
     border-radius: 12px;
     width: 100%;
-    max-width: 500px;
+    max-width: min(500px, 100vw - 20px, calc(100vh - 200px));
+    max-width: min(500px, 100vw - 20px, calc(100dvh - 200px));
     aspect-ratio: 1;
 }
 
@@ -98,7 +102,7 @@ h1 {
     background: var(--bg-secondary);
     border: none;
     border-radius: 6px;
-    font-size: clamp(1rem, 3vw, 1.5rem);
+    font-size: clamp(0.8rem, 2.5vw, 1.5rem);
     font-weight: bold;
     color: var(--text);
     cursor: pointer;
@@ -107,7 +111,6 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 44px;
 }
 
 .cell:active {
@@ -198,39 +201,64 @@ button:active {
 
 @media (max-width: 480px) {
     body {
-        padding: 5px;
-    }
-
-    #app {
-        gap: 15px;
-    }
-
-    #mega-board {
-        gap: 6px;
-        padding: 6px;
-    }
-
-    .small-board {
-        gap: 3px;
-        padding: 3px;
-    }
-}
-
-@media (max-height: 700px) and (orientation: portrait) {
-    body {
-        padding: 5px;
+        padding: 8px;
     }
 
     #app {
         gap: 10px;
+        padding-top: 5px;
+    }
+
+    #mega-board {
+        gap: 5px;
+        padding: 5px;
+    }
+
+    .small-board {
+        gap: 2px;
+        padding: 2px;
+        border-radius: 6px;
+    }
+
+    .cell {
+        border-radius: 4px;
+    }
+
+    button {
+        padding: 12px 24px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-height: 700px) {
+    body {
+        padding: 5px;
+        align-items: flex-start;
+    }
+
+    #app {
+        gap: 8px;
+        padding-top: 5px;
     }
 
     h1 {
-        font-size: 1.3rem;
-        margin-bottom: 5px;
+        font-size: 1.1rem;
+        margin-bottom: 4px;
     }
 
     #status {
-        font-size: 0.9rem;
+        font-size: 0.8rem;
+        min-height: 1.2em;
+    }
+
+    #mega-board {
+        max-width: min(500px, 100vw - 20px, calc(100vh - 150px));
+        max-width: min(500px, 100vw - 20px, calc(100dvh - 150px));
+    }
+
+    button {
+        padding: 10px 20px;
+        font-size: 0.85rem;
+        min-height: 40px;
     }
 }
