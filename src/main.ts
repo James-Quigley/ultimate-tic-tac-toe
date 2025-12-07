@@ -117,15 +117,16 @@ class GameUI {
             !this.isComputerThinking) {
 
             this.isComputerThinking = true;
+            this.updateUI(); // Show "Computer is thinking..."
 
             // Add a small delay so the computer doesn't move instantly
             await new Promise(resolve => setTimeout(resolve, 500));
 
+            this.isComputerThinking = false;
+
             if (this.game.makeComputerMove()) {
                 this.updateUI();
             }
-
-            this.isComputerThinking = false;
         }
     }
 
